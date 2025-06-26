@@ -27,3 +27,10 @@ def update_problem(request, pk):
         problem.save()
     
     return redirect('revision_view')
+
+from django.http import JsonResponse
+from check_reminders import run_check  # import your logic function
+
+def check_reminders_view(request):
+    run_check()
+    return JsonResponse({'status': 'Reminder check completed'})
