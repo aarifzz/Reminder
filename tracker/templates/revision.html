@@ -1,105 +1,6 @@
 {% comment %} <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Problem Revision Tracker</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        table td, table th {
-            vertical-align: middle;
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
-<div class="container mt-5">
-
-    <h2 class="mb-4">Add New Problem</h2>
-    <form method="post">
-        {% csrf_token %}
-        <div class="row mb-3">
-            <div class="col">
-                {{ form.problem.label_tag }}<br>
-                {{ form.problem }}
-            </div>
-            <div class="col">
-                {{ form.difficulty.label_tag }}<br>
-                {{ form.difficulty }}
-            </div>
-            <div class="col">
-                {{ form.link.label_tag }}<br>
-                {{ form.link }}
-            </div>
-            <div class="col">
-                {{ form.notes.label_tag }}<br>
-                {{ form.notes }}
-            </div>
-            <div class="col">
-                {{ form.date.label_tag }}<br>
-                {{ form.date }}
-            </div>
-            <div class="col mt-4">
-                <button type="submit" class="btn btn-success">Add Problem</button>
-            </div>
-        </div>
-    </form>
-
-    <hr>
-
-    <h2 class="mb-4">Revision List</h2>
-    <table class="table table-bordered">
-        <thead class="table-light">
-        <tr>
-            <th>Problem</th>
-            <th>Link</th>
-            <th>Date</th>
-            <th>Difficulty</th>
-            <th>Notes</th>
-            <th>1D</th>
-            <th>3D</th>
-            <th>5D</th>
-            <th>7D</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for p in problems %}
-        <form method="post" action="{% url 'update_problem' p.id %}">
-            {% csrf_token %}
-            <tr>
-                <td>{{ p.problem }}</td>
-                <td>{{ p.link }}</td>
-                <td>{{ p.date }}</td>
-                <td>{{ p.difficulty }}</td>
-                <td>{{ p.notes }}</td>
-                <td><input type="checkbox" name="day_1" {% if p.day_1 %}checked{% endif %}></td>
-                <td><input type="checkbox" name="day_3" {% if p.day_3 %}checked{% endif %}></td>
-                <td><input type="checkbox" name="day_5" {% if p.day_5 %}checked{% endif %}></td>
-                <td><input type="checkbox" name="day_7" {% if p.day_7 %}checked{% endif %}></td>
-                <td>
-                    <button type="submit" class="btn btn-primary btn-sm me-1">✔️</button>
-                    <a href="{% url 'edit_problem' p.id %}" class="btn btn-warning btn-sm me-1">✏️</a>
-                    <a href="{% url 'delete_problem' p.id %}" class="btn btn-danger btn-sm"
-                    onclick="return confirm('Are you sure you want to delete this problem?');">🗑️</a>
-                </td>
-
-            </tr>
-        </form>
-        {% empty %}
-        <tr>
-            <td colspan="7">No problems added yet.</td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-</div>
-</body>
-</html> {% endcomment %}
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
   <meta charset="UTF-8">
   <title>Revision Tracker</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -184,5 +85,185 @@
   </table>
 
 </div>
+</body>
+</html> {% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Revision Tracker</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color:rgb(140, 168, 190);
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .container {
+      margin-top: 40px;
+    }
+
+    h2 {
+      font-weight: 600;
+      color: #333;
+    }
+
+    table {
+      background-color: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(118, 62, 62, 0.05);
+    }
+
+    th {
+      background-color:rgb(235, 235, 239) !important;
+      font-weight: 500;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    td, th {
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .form-control {
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+
+    .btn {
+      border-radius: 6px;
+      font-size: 0.85rem;
+      padding: 6px 12px;
+    }
+
+    .btn-success {
+      background-color: #27ae60;
+      border: none;
+    }
+
+    .btn-danger {
+      background-color: #e74c3c;
+      border: none;
+    }
+
+    .btn-primary {
+      background-color: #2980b9;
+      border: none;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    a.link-style {
+      color: #3498db;
+      text-decoration: none;
+    }
+
+    a.link-style:hover {
+      text-decoration: underline;
+    }
+
+    input[type="checkbox"] {
+      transform: scale(1.2);
+    }
+
+    @media (max-width: 768px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      thead tr {
+        display: none;
+      }
+
+      td {
+        margin-bottom: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2 class="mb-4">Revision List</h2>
+
+  <table class="table table-bordered table-hover">
+    <thead>
+    <tr>
+      <th>Problem</th>
+      <th>Link</th>
+      <th>Date</th>
+      <th>Difficulty</th>
+      <th>Notes</th>
+      <th>1D</th>
+      <th>3D</th>
+      <th>5D</th>
+      <th>7D</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for p in problems %}
+      <tr>
+        <form method="post">
+          {% csrf_token %}
+          <td><input type="text" name="problem_{{ p.id }}" value="{{ p.problem }}" class="form-control"></td>
+          <td>
+            <input type="url" name="link_{{ p.id }}" value="{{ p.link }}" class="form-control">
+            {% if p.link %}
+              <a href="{{ p.link }}" target="_blank" class="link-style">🔗</a>
+            {% endif %}
+          </td>
+          <td><input type="date" name="date_{{ p.id }}" value="{{ p.date|date:'Y-m-d' }}" class="form-control"></td>
+          <td>
+            <select name="difficulty_{{ p.id }}" class="form-control">
+              <option value="Easy" {% if p.difficulty == "Easy" %}selected{% endif %}>Easy</option>
+              <option value="Medium" {% if p.difficulty == "Medium" %}selected{% endif %}>Medium</option>
+              <option value="Hard" {% if p.difficulty == "Hard" %}selected{% endif %}>Hard</option>
+            </select>
+          </td>
+          <td><input type="text" name="notes_{{ p.id }}" value="{{ p.notes }}" class="form-control"></td>
+          <td><input type="checkbox" name="day_1_{{ p.id }}" {% if p.day_1 %}checked{% endif %}></td>
+          <td><input type="checkbox" name="day_3_{{ p.id }}" {% if p.day_3 %}checked{% endif %}></td>
+          <td><input type="checkbox" name="day_5_{{ p.id }}" {% if p.day_5 %}checked{% endif %}></td>
+          <td><input type="checkbox" name="day_7_{{ p.id }}" {% if p.day_7 %}checked{% endif %}></td>
+          <td>
+            <button type="submit" name="update_{{ p.id }}" class="btn btn-success">Update</button>
+            <button type="submit" name="delete_{{ p.id }}" class="btn btn-danger" onclick="return confirm('Delete this problem?')">Delete</button>
+          </td>
+        </form>
+      </tr>
+    {% endfor %}
+
+    <!-- Add new problem row -->
+    <tr>
+      <form method="post">
+        {% csrf_token %}
+        <td><input type="text" name="new_problem" class="form-control" placeholder="New problem"></td>
+        <td><input type="url" name="new_link" class="form-control" placeholder="https://..."></td>
+        <td><input type="date" name="new_date" class="form-control"></td>
+        <td>
+          <select name="new_difficulty" class="form-control">
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
+          </select>
+        </td>
+        <td><input type="text" name="new_notes" class="form-control" placeholder="Notes"></td>
+        <td colspan="5">
+          <button type="submit" name="add_new" class="btn btn-primary">➕ Add</button>
+        </td>
+      </form>
+    </tr>
+
+    </tbody>
+  </table>
+</div>
+
 </body>
 </html>
