@@ -23,6 +23,18 @@
                 {{ form.problem }}
             </div>
             <div class="col">
+                {{ form.difficulty.label_tag }}<br>
+                {{ form.difficulty }}
+            </div>
+            <div class="col">
+                {{ form.link.label_tag }}<br>
+                {{ form.link }}
+            </div>
+            <div class="col">
+                {{ form.notes.label_tag }}<br>
+                {{ form.notes }}
+            </div>
+            <div class="col">
                 {{ form.date.label_tag }}<br>
                 {{ form.date }}
             </div>
@@ -39,7 +51,10 @@
         <thead class="table-light">
         <tr>
             <th>Problem</th>
+            <th>Link</th>
             <th>Date</th>
+            <th>Difficulty</th>
+            <th>Notes</th>
             <th>1D</th>
             <th>3D</th>
             <th>5D</th>
@@ -53,12 +68,21 @@
             {% csrf_token %}
             <tr>
                 <td>{{ p.problem }}</td>
+                <td>{{ p.link }}</td>
                 <td>{{ p.date }}</td>
+                <td>{{ p.difficulty }}</td>
+                <td>{{ p.notes }}</td>
                 <td><input type="checkbox" name="day_1" {% if p.day_1 %}checked{% endif %}></td>
                 <td><input type="checkbox" name="day_3" {% if p.day_3 %}checked{% endif %}></td>
                 <td><input type="checkbox" name="day_5" {% if p.day_5 %}checked{% endif %}></td>
                 <td><input type="checkbox" name="day_7" {% if p.day_7 %}checked{% endif %}></td>
-                <td><button type="submit" class="btn btn-primary btn-sm">Update</button></td>
+                <td>
+                    <button type="submit" class="btn btn-primary btn-sm me-1">✔️</button>
+                    <a href="{% url 'edit_problem' p.id %}" class="btn btn-warning btn-sm me-1">✏️</a>
+                    <a href="{% url 'delete_problem' p.id %}" class="btn btn-danger btn-sm"
+                    onclick="return confirm('Are you sure you want to delete this problem?');">🗑️</a>
+                </td>
+
             </tr>
         </form>
         {% empty %}

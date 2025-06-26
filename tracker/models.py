@@ -8,8 +8,9 @@ class ProblemRevision(models.Model):
     ]
     problem = models.CharField(max_length=255)
     date = models.DateField()
-    # link = models.URLField()
-    # difficulty = models.CharField(max_length=10, choices=DIFFICULTY_CHOICES)
+    link = models.URLField(default="", blank=True)
+    difficulty = models.CharField(max_length=10, choices=DIFFICULTY_CHOICES,default="Easy")
+    notes = models.TextField(default="", blank=True)
     day_1 = models.BooleanField(default=False)
     day_3 = models.BooleanField(default=False)
     day_5 = models.BooleanField(default=False)

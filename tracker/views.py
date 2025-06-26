@@ -11,7 +11,7 @@ def revision_view(request):
     else:
         form = ProblemRevisionForm()
 
-        problems = ProblemRevision.objects.all().order_by('problem')
+        problems = ProblemRevision.objects.all().order_by('date')
     return render(request, 'revision.html', {'form': form, 'problems': problems})
 
 from django.shortcuts import get_object_or_404
@@ -34,3 +34,21 @@ from tracker.check_reminders import run_check  # import your logic function
 def check_reminders_view(request):
     run_check()
     return JsonResponse({'status': 'Reminder check completed'})
+
+def edit_problem(request, pk):
+    problem = get_object_or_404(ProblemRevision, pk=pk)
+    if request.method == 'POST':
+        form = ProblemRevisionForm(request.POST, instance=problem)
+        if form.is_valid():
+            form.save()
+            return redirect('revision_view')
+    else:
+        form = ProblemRevisionForm(instance=problem)
+    return render(request, 'edit_problem.html', {'form': form})
+
+
+def delete_problem(request, pk):
+    problem = get_object_or_404(ProblemRevision, pk=pk)
+    problem.delete()
+    return redirect('revision_view')
+
