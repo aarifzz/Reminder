@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Problem Revision Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        table td, table th {
+            vertical-align: middle;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+
+    <h2 class="mb-4">Add New Problem</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row mb-3">
+            <div class="col">
+                {{ form.problem.label_tag }}<br>
+                {{ form.problem }}
+            </div>
+            <div class="col">
+                {{ form.date.label_tag }}<br>
+                {{ form.date }}
+            </div>
+            <div class="col mt-4">
+                <button type="submit" class="btn btn-success">Add Problem</button>
+            </div>
+        </div>
+    </form>
+
+    <hr>
+
+    <h2 class="mb-4">Revision List</h2>
+    <table class="table table-bordered">
+        <thead class="table-light">
+        <tr>
+            <th>Problem</th>
+            <th>Date</th>
+            <th>1D</th>
+            <th>3D</th>
+            <th>5D</th>
+            <th>7D</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for p in problems %}
+        <form method="post" action="{% url 'update_problem' p.id %}">
+            {% csrf_token %}
+            <tr>
+                <td>{{ p.problem }}</td>
+                <td>{{ p.date }}</td>
+                <td><input type="checkbox" name="day_1" {% if p.day_1 %}checked{% endif %}></td>
+                <td><input type="checkbox" name="day_3" {% if p.day_3 %}checked{% endif %}></td>
+                <td><input type="checkbox" name="day_5" {% if p.day_5 %}checked{% endif %}></td>
+                <td><input type="checkbox" name="day_7" {% if p.day_7 %}checked{% endif %}></td>
+                <td><button type="submit" class="btn btn-primary btn-sm">Update</button></td>
+            </tr>
+        </form>
+        {% empty %}
+        <tr>
+            <td colspan="7">No problems added yet.</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+</body>
+</html>
