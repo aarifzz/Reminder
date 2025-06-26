@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{% comment %} <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -92,6 +92,96 @@
         {% endfor %}
         </tbody>
     </table>
+
+</div>
+</body>
+</html> {% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Revision Tracker</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    table td, table th {
+      vertical-align: middle;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<div class="container mt-5">
+
+  <h2 class="mb-4">Revision List</h2>
+
+  <table class="table table-bordered table-hover">
+    <thead class="table-light">
+    <tr>
+      <th>Problem</th>
+      <th>Link</th>
+      <th>Date</th>
+      <th>Difficulty</th>
+      <th>Notes</th>
+      <th>1D</th>
+      <th>3D</th>
+      <th>5D</th>
+      <th>7D</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    {% for p in problems %}
+    <tr>
+      <form method="post">
+        {% csrf_token %}
+        <td><input type="text" name="problem_{{ p.id }}" value="{{ p.problem }}" class="form-control"></td>
+        <td><input type="url" name="link_{{ p.id }}" value="{{ p.link }}" class="form-control"></td>
+        <td><input type="date" name="date_{{ p.id }}" value="{{ p.date|date:'Y-m-d' }}" class="form-control"></td>
+        <td>
+          <select name="difficulty_{{ p.id }}" class="form-control">
+            <option value="Easy" {% if p.difficulty == "Easy" %}selected{% endif %}>Easy</option>
+            <option value="Medium" {% if p.difficulty == "Medium" %}selected{% endif %}>Medium</option>
+            <option value="Hard" {% if p.difficulty == "Hard" %}selected{% endif %}>Hard</option>
+          </select>
+        </td>
+        <td><input type="text" name="notes_{{ p.id }}" value="{{ p.notes }}" class="form-control"></td>
+        <td><input type="checkbox" name="day_1_{{ p.id }}" {% if p.day_1 %}checked{% endif %}></td>
+        <td><input type="checkbox" name="day_3_{{ p.id }}" {% if p.day_3 %}checked{% endif %}></td>
+        <td><input type="checkbox" name="day_5_{{ p.id }}" {% if p.day_5 %}checked{% endif %}></td>
+        <td><input type="checkbox" name="day_7_{{ p.id }}" {% if p.day_7 %}checked{% endif %}></td>
+        <td>
+          <button name="update_{{ p.id }}" class="btn btn-success btn-sm">Update</button>
+          <button name="delete_{{ p.id }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete this problem?')">Delete</button>
+        </td>
+      </form>
+    </tr>
+    {% endfor %}
+
+    <!-- New row -->
+    <tr>
+      <form method="post">
+        {% csrf_token %}
+        <td><input type="text" name="new_problem" class="form-control" placeholder="New problem" required></td>
+        <td><input type="url" name="new_link" class="form-control" placeholder="https://..." required></td>
+        <td><input type="date" name="new_date" class="form-control" required></td>
+        <td>
+          <select name="new_difficulty" class="form-control">
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
+          </select>
+        </td>
+        <td><input type="text" name="new_notes" class="form-control" placeholder="Notes"></td>
+        <td colspan="5">
+          <button name="add_new" class="btn btn-primary btn-sm">➕ Add</button>
+        </td>
+      </form>
+    </tr>
+
+    </tbody>
+  </table>
 
 </div>
 </body>
