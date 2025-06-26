@@ -79,13 +79,22 @@ def revision_view(request):
                 get_object_or_404(ProblemRevision, pk=pk).delete()
 
             elif key == "add_new":
-                ProblemRevision.objects.create(
-                    problem=request.POST.get("new_problem"),
-                    link=request.POST.get("new_link"),
-                    date=request.POST.get("new_date"),
-                    difficulty=request.POST.get("new_difficulty"),
-                    notes=request.POST.get("new_notes"),
-                )
+                problem = request.POST.get("new_problem", "").strip()
+                link = request.POST.get("new_link", "").strip()
+                date = request.POST.get("new_date", "").strip()
+                difficulty = request.POST.get("new_difficulty", "").strip()
+                notes = request.POST.get("new_notes", "").strip()
+
+                # ✅ Backend validation: only add if all required fields are filled
+                if problem and link and date and difficulty:
+                    ProblemRevision.objects.create(
+                        problem=problem,
+                        link=link,
+                        date=date,
+                        difficulty=difficulty,
+                        notes=notes,
+                    )   
+
         return redirect('revision_view')
 
     problems = ProblemRevision.objects.all().order_by('date')

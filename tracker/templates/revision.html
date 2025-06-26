@@ -212,14 +212,14 @@
       <tr>
         <form method="post">
           {% csrf_token %}
-          <td><input type="text" name="problem_{{ p.id }}" value="{{ p.problem }}" class="form-control"></td>
+          <td><input type="text" name="problem_{{ p.id }}" value="{{ p.problem }}" class="form-control" required></td>
           <td>
-            <input type="url" name="link_{{ p.id }}" value="{{ p.link }}" class="form-control">
+            <input type="url" name="link_{{ p.id }}" value="{{ p.link }}" class="form-control" required>
             {% if p.link %}
               <a href="{{ p.link }}" target="_blank" class="link-style">🔗</a>
             {% endif %}
           </td>
-          <td><input type="date" name="date_{{ p.id }}" value="{{ p.date|date:'Y-m-d' }}" class="form-control"></td>
+          <td><input type="date" name="date_{{ p.id }}" value="{{ p.date|date:'Y-m-d' }}" required class="form-control"></td>
           <td>
             <select name="difficulty_{{ p.id }}" class="form-control">
               <option value="Easy" {% if p.difficulty == "Easy" %}selected{% endif %}>Easy</option>
