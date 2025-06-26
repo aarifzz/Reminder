@@ -1,9 +1,15 @@
 from django.db import models
 
 class ProblemRevision(models.Model):
+    DIFFICULTY_CHOICES = [
+        ('Easy', 'Easy'),
+        ('Medium', 'Medium'),
+        ('Hard', 'Hard'),
+    ]
     problem = models.CharField(max_length=255)
     date = models.DateField()
-
+    # link = models.URLField()
+    # difficulty = models.CharField(max_length=10, choices=DIFFICULTY_CHOICES)
     day_1 = models.BooleanField(default=False)
     day_3 = models.BooleanField(default=False)
     day_5 = models.BooleanField(default=False)

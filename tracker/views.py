@@ -11,7 +11,7 @@ def revision_view(request):
     else:
         form = ProblemRevisionForm()
 
-    problems = ProblemRevision.objects.all()
+        problems = ProblemRevision.objects.all().order_by('problem')
     return render(request, 'revision.html', {'form': form, 'problems': problems})
 
 from django.shortcuts import get_object_or_404
