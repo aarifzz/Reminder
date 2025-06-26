@@ -1,0 +1,1 @@
+web: gunicorn dsatracker.wsgi
