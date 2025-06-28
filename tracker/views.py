@@ -50,6 +50,11 @@ def revision_view(request):
     return render(request, 'revision.html', {'problems': problems})
 
 
+from django.http import JsonResponse
+from check_reminders import run_check
+
 def check_reminders_view(request):
     run_check()
+    return JsonResponse({'status': 'reminder check triggered'})  # just a tiny response
+
 
