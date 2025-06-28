@@ -1,11 +1,12 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 class ProblemRevision(models.Model):
     DIFFICULTY_CHOICES = [
         ('Easy', 'Easy'),
         ('Medium', 'Medium'),
         ('Hard', 'Hard'),
     ]
+    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
     problem = models.CharField(max_length=255)
     date = models.DateField()
     link = models.URLField( default="", blank=True)

@@ -1,0 +1,65 @@
+{% load socialaccount %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+    }
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      color: #333;
+    }
+    .btn-google {
+      background-color: #db4437;
+      color: white;
+    }
+    .btn-google:hover {
+      background-color: #c1351d;
+    }
+  </style>
+</head>
+<body>
+  <div class="card" style="width: 400px;">
+    <h3 class="text-center mb-4">Login</h3>
+    {% if form.errors %}
+      <div class="alert alert-danger">
+        {{ form.errors }}
+      </div>
+    {% endif %}
+
+    <!-- Django form login -->
+    <form method="post" action="{% url 'account_login' %}">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primary w-100 mt-2">Login with username/password</button>
+    </form>
+
+    <div class="text-center mt-3 mb-2">
+      <small>or</small>
+    </div>
+
+    <!-- Google login button -->
+    <div class="d-grid gap-2 mb-2">
+      <a href="{% provider_login_url 'google' %}" class="btn btn-google">
+        Sign in with Google
+      </a>
+    </div>
+
+    <div class="text-center mt-2">
+      <a href="{% url 'account_signup' %}">Don't have an account? Sign up</a>
+    </div>
+  </div>
+</body>
+</html>
